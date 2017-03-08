@@ -1,17 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{459E97AC-4454-4972-9500-EDC637C038B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7DE05A7-8291-474B-802A-12BD0A045255}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ContosoUniversity", "src\ContosoUniversity\ContosoUniversity.xproj", "{AF0917DF-3B2F-4980-9B72-04DD1B399604}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoUniversity", "src\ContosoUniversity\ContosoUniversity.csproj", "{AF0917DF-3B2F-4980-9B72-04DD1B399604}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
