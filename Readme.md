@@ -1,3 +1,3 @@
-### ²»Àí½â£º
+### ä¸ç†è§£ï¼š
 
 1. DbContext is a combination of the Unit Of Work and Repository patterns.
