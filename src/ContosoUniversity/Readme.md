@@ -72,6 +72,9 @@ Conventional behavior can be overridden. For example, you can explicitly specify
 
 ---------------
 ## <span>标签
-The HTML <span> element is a generic inline container for phrasing content, which does not inherently represent anything. It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. It should be used only when no other semantic element is appropriate. <span> is very much like a <div> element, but <div> is a block-level element whereas a <span> is an inline element.
+The HTML `<span>` element is a generic inline container for phrasing content, which does not inherently represent anything. 
+It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. 
+It should be used only when no other semantic element is appropriate. 
+`<span>` is very much like a `<div>` element, but `<div>` is a block-level element whereas a `<span>` is an inline element.
 
-<span>无实际含义， 同div功能一样。但是div是块元素，span是行元素
+`<span>`无实际含义， 同div功能一样。但是div是块元素，span是行元素
