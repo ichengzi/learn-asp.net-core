@@ -1,0 +1,48 @@
+﻿@model IEnumerable<double>
+@using System.Text
+
+@{
+    ViewData["Title"] = "Tools";
+}
+
+<h2>15 random nums</h2>
+
+<p>
+    <a asp-action="Index">Get new nums</a>
+</p>
+
+@*<p>
+@foreach (var item in Model)
+{
+    @item<br>
+}
+</p>
+
+<text>
+    @foreach (var item in Model)
+    {
+        @item.ToString("0.00")<br>
+    }
+</text>*@
+
+<p>average value： @Model.Average()</p>
+<ol>
+    @foreach (var item in Model)
+    {
+        <li>@item.ToString("0.000")</li>
+    }
+</ol>
+
+
+
+@{ 
+    var numStrs = new StringBuilder();
+    foreach (var item in Model)
+    {
+        numStrs.AppendLine(item.ToString("0.000"));
+    }
+}
+@*<input type="text" readonly="readonly" 
+       height="800"
+       value=@numStrs.ToString()/>*@
+<textarea>@numStrs.ToString()</textarea>
