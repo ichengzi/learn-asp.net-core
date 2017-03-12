@@ -71,10 +71,105 @@ Conventional behavior can be overridden. For example, you can explicitly specify
 
 
 ---------------
-## <span>标签
+## `<span>`标签
 The HTML `<span>` element is a generic inline container for phrasing content, which does not inherently represent anything. 
 It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. 
 It should be used only when no other semantic element is appropriate. 
 `<span>` is very much like a `<div>` element, but `<div>` is a block-level element whereas a `<span>` is an inline element.
 
 `<span>`无实际含义， 同div功能一样。但是div是块元素，span是行元素
+
+## Route data and Query string
+
+![Route Data  And Query String](Images/route data  and query string.png)
+
+## model binder
+
+a `model binder` converts posted form values to CLR types and passes them to the action method in parameters
+
+## validateAntiForgeryToken
+
+The `ValidateAntiForgeryToken` attribute helps prevent cross-site request forgery (CSRF) attacks. 
+The token is `automatically injected` into the view by the [FormTagHelper](https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.TagHelpers/FormTagHelper.cs) 
+and is included when the form is submitted by the user. 
+The token is validated by the `ValidateAntiForgeryToken` attribute. 
+
+## overPosting
+
+```csharp
+public class Student
+{
+    public int ID { get; set; }
+    public string LastName { get; set; }
+    public string FirstMidName { get; set; }
+    public DateTime EnrollmentDate { get; set; }
+    public string Secret { get; set; }
+}
+```
+
+Even if you don't have a `Secret` field on the web page, 
+a hacker could use a tool such as Fiddler, or write some JavaScript, to post a `Secret` form value. 
+Without the `Bind` attribute limiting the fields that `the model binder` uses when it creates a Student instance, 
+the model binder would pick up that `Secret` form value and use it to create the Student entity instance. 
+Then whatever value the hacker specified for the `Secret` form field would be updated in your database. 
+
+It's a security best practice to use the `Include` parameter with the Bind attribute to whitelist fields.
+It's also possible to use the `Exclude` parameter to blacklist fields you want to exclude. 
+The reason `Include` is more secure is that when you add a new property to the entity, 
+the new field is not automatically protected by an `Exclude` list.
+
+`Bind[''']`的方式会清除其中未包含的字段，不适合只修改部分字段值的场景。
+
+The scaffolder generated a `Bind` attribute and added the entity created by the model binder to the entity set with a `Modified` flag. 
+That code is not recommended for many scenarios because the `Bind` attribute 
+clears out `any pre-existing data` in fields not listed in the `Include` parameter.
+
+## Entity States
+
+The database context `keeps track of whether entities in memory` are in sync with their corresponding rows in the database, 
+and this information determines what happens when you call the `SaveChanges` method.
+
+1. Added
+2. Unchanged
+3. Modified
+4. Deleted
+5. Detached(分离的) -- The entity isn't being tracked by the database context.
+
+## dbContext( desktop vs web application)
+
+In a desktop application, state changes are typically set automatically. 
+You read an entity and make changes to some of its property values. 
+This causes its entity state to automatically be changed to `Modified`. 
+Then when you call `SaveChanges`, the Entity Framework generates a SQL UPDATE statement that updates only the actual properties that you changed.
+
+In a web app, the `DbContext` that initially reads an entity 
+and displays its data to be edited is disposed after a page is rendered. 
+When the HttpPost `Edit` action method is called,  `a new web request` is made and you have `a new instance` of the `DbContext`. 
+If you re-read the entity in that new context, you simulate desktop processing.
+
+每一次新的请求都会生成新的 controller，也即新 dbContext。
+
+## Delete
+
+You'll add a try-catch block to the HttpPost Delete method to handle 
+any errors that might occur when the database is updated. 
+If an error occurs, the HttpPost Delete method calls the HttpGet Delete method, 
+passing it a parameter that indicates that an error has occurred. 
+The HttpGet Delete method then redisplays the confirmation page along with the error message,
+ giving the user an opportunity to cancel or try again.
+
+## Closing database connection
+
+In *Startup.cs* you call the `AddDbContext extension method` to provision(供给) the `DbContext` class in the ASP.NET DI container. 
+That method sets the service lifetime to `Scoped` by default. 
+`Scoped` means the context object lifetime **coincides（相一致）** with the web request life time, 
+and the `Dispose` method will be called automatically at the end of the web request.
+
+## transaction - 事务
+
+By default the Entity Framework implicitly implements transactions. 
+In scenarios where you make changes to multiple rows or tables and then call `SaveChanges`, 
+the Entity Framework automatically makes sure that either 
+all of your changes succeed or they all fail. 
+If some changes are done first and then an error happens, those changes are automatically rolled back. 
+
