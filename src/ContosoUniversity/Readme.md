@@ -254,7 +254,7 @@ When you specify HTTP GET, the form data is passed in the URL as query strings,
 which enables users to bookmark the URL. 
 The W3C guidelines recommend that you should use GET when the action does not result in an update.
 
-`from`默认是post，`a`只能是get。相对于 **tagHelper**
+`<form>`默认是post，`<a>`只能是get。相对于 **tagHelper**的`asp-route-data`
 
 ## async
 
