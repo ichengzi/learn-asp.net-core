@@ -20,10 +20,57 @@ namespace ContosoUniversity.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Students.ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter,string searchString,int? page)
         {
-            return View(await _context.Students.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "Name";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+                page = 1;//search 只提供了search的值，其他的都是null
+                        // 其他情况下，queryString都是null，因为其他链接都没有为其提供数据
+                        // 所以，如果其不为null，则是因为点击了search
+            else
+                searchString = currentFilter;
+            ViewData["CurrentFilter"] = searchString;
+
+            var students = from s in _context.Students
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.LastName.Contains(searchString)
+                                       || s.FirstMidName.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    students = students.OrderByDescending(s => s.LastName);
+                    break;
+                case "Date":
+                    students = students.OrderBy(s => s.EnrollmentDate);
+                    break;
+                case "date_desc":
+                    students = students.OrderByDescending(s => s.EnrollmentDate);
+                    break;
+                default:
+                    students = students.OrderBy(s => s.LastName);
+                    break;
+            }
+
+            int pageSize = 5;
+            if (page == null || page <= 1)
+                page = 1;
+            return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(),page?? 1,pageSize));
+            //return View(await students.AsNoTracking().ToListAsync());
         }
+
+
 
         // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -93,7 +140,6 @@ namespace ContosoUniversity.Controllers
             return View(student);
         }
         #endregion
-
 
         #region edit
         // GET: Students/Edit/5
@@ -175,10 +221,10 @@ namespace ContosoUniversity.Controllers
                 }
             }
             return View(studentToUpdate);
-        } 
+        }
         #endregion
 
-
+        #region delete
         // GET: Students/Delete/5
         //public async Task<IActionResult> Delete(int? id)
         //{
@@ -276,9 +322,8 @@ namespace ContosoUniversity.Controllers
         //        //Log the error (uncomment ex variable name and write a log.)
         //        return RedirectToAction("Delete", new { id = id, saveChangesError = true });
         //    }
-        //}
-
-
+        //} 
+        #endregion
 
         private bool StudentExists(int id)
         {

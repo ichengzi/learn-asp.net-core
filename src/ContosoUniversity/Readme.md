@@ -222,5 +222,48 @@ This caching is `often unnecessary` in a web application because context instanc
 are typically short-lived (a new one is created and disposed for each request) 
 and **the context that reads an entity is typically disposed before that entity is used again**.
 
+## IQueryable
 
+The code creates an `IQueryable` variable before the switch statement, modifies it in the switch statement, 
+and calls the `ToListAsync` method after the `switch` statement. 
+**When you create and modify `IQueryable` variables, no query is sent to the database.**
+The query is not executed until you convert the `IQueryable` object into a collection by calling a method such as `ToListAsync`. 
 
+ For example, the .NET Framework implementation of the `Contains` method performs a case-sensitive comparison by default, 
+ but in SQL Server this is determined by the collation setting of the SQL Server instance. 
+ That setting defaults to case-insensitive. 
+ You could call the `ToUpper` method to make the test explicitly case-insensitive:  
+ *Where(s => s.LastName.ToUpper().Contains(searchString.ToUpper())*. 
+ 
+That would ensure that results stay the same if you change the code later to 
+use a repository which returns   an `IEnumerable` collection instead of an `IQueryable` object. 
+**(When you call the `Contains` method on an `IEnumerable` collection, you get the .NET Framework implementation;
+ when you call it on an `IQueryable` object, you get the database provider implementation.)** 
+However, there is a performance penalty for this solution. 
+
+The `ToUpper` code would put a function in the WHERE clause of the TSQL SELECT statement. 
+**That would prevent the optimizer from using an index（数据库索引）.** 
+Given that SQL is **mostly installed as case-insensitive**, 
+it's best to avoid the `ToUpper` code until you migrate to a case-sensitive data store.
+
+## Form
+
+By default, the `<form>` tag helper submits form data with a POST, 
+which means that parameters are passed in the HTTP message body and not in the URL as query strings. 
+When you specify HTTP GET, the form data is passed in the URL as query strings, 
+which enables users to bookmark the URL. 
+The W3C guidelines recommend that you should use GET when the action does not result in an update.
+
+`from`默认是post，`a`只能是get。相对于 **tagHelper**
+
+## async
+
+A `CreateAsync` method is used instead of a constructor to 
+create the `PaginatedList<T>` object because **constructors can't run asynchronous code.**
+
+## EF1.0
+
+In the 1.0 version of Entity Framework Core, the entire result set is returned to the client, 
+and grouping is done on the client. In some scenarios this could create performance problems. 
+Be sure to test performance with production volumes of data, 
+and if necessary use raw SQL to do the grouping on the server. 
