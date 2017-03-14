@@ -164,6 +164,7 @@ The scaffolder generated a `Bind` attribute and added the entity created by the 
 That code is not recommended for many scenarios because the `Bind` attribute 
 clears out `any pre-existing data` in fields not listed in the `Include` parameter.
 
+-------------
 ## Entity States
 
 The database context `keeps track of whether entities in memory` are in sync with their corresponding rows in the database, 
@@ -267,3 +268,82 @@ In the 1.0 version of Entity Framework Core, the entire result set is returned t
 and grouping is done on the client. In some scenarios this could create performance problems. 
 Be sure to test performance with production volumes of data, 
 and if necessary use raw SQL to do the grouping on the server. 
+
+--------------------
+## DataType
+
+The `DataType` attribute can also enable the application to automatically provide type-specific features. 
+For example, a `mailto:` link can be created for `DataType.EmailAddress`, 
+and a date selector can be provided for `DataType.Date` in browsers that `support HTML5.` 
+The `DataType` attribute emits HTML 5 `data-` (pronounced data dash) attributes that HTML 5 browsers can understand. 
+The `DataType` attributes do not provide any validation.
+
+## 
+
+The `MaxLength` attribute provides functionality similar to the `StringLength` attribute 
+but doesn't provide client side validation.
+
+Types that `can't be null` are automatically treated as required fields.
+
+FullName is a `calculated property` that returns a value that's created by concatenating two other properties. 
+Therefore it has only `a get accessor`, and no FullName column will be generated in the database.
+
+If a navigation property can hold multiple entities, 
+its type must be a list in which entries can be added, deleted, and updated.  
+You can specify `ICollection<T>` or a type such as `List<T>` or `HashSet<T>`. 
+If you specify `ICollection<T>`, EF creates a `HashSet<T>` collection by default.
+
+But the Entity Framework can't automatically recognize InstructorID as the primary key of this entity 
+because its name doesn't follow **the ID or classnameID naming convention.**
+Therefore, the `Key attribute` is used to identify it as the key.
+
+## 
+
+Column mapping is generally not required, because the Entity Framework chooses the 
+appropriate SQL Server data type based on the CLR type that you define for the property. 
+The CLR decimal type maps to a SQL Server decimal type. 
+But in this case you know that the column will be holding currency amounts, 
+and the money data type is more appropriate for that.
+
+![Cascade Delete](Images/cascade delete.png)
+
+
+## With payload
+
+There's a many-to-many relationship between the Student and Course entities, 
+and the Enrollment entity functions as a many-to-many join table with payload in the database. 
+**"With payload"** means that the Enrollment table **contains additional data** besides foreign keys 
+for the joined tables (in this case, a primary key and a Grade property).
+
+If the Enrollment table didn't include grade information, 
+it would only need to contain the two foreign keys CourseID and StudentID. 
+In that case, it would be a many-to-many join table **without payload (or a pure join table)** in the database. 
+
+## Composite Key
+
+**联合主键**
+The only way to identify composite primary keys to EF is by using the fluent API 
+(it can't be done by using attributes).
+
+## Fluent API and Attributes
+
+Some attributes such as MinimumLength can't be applied with the fluent API. As mentioned previously, 
+MinimumLength doesn't change the schema, it only applies a client and server side validation rule.
+
+If you do use both, note that wherever there is a conflict, **Fluent API overrides attributes.**
+
+![Entity Diagram](Images/entity diagram.png)
+
+----------------------
+## Tag Helper and Html Helper
+
+"In many cases, HTML Helpers provide an alternative approach to a specific Tag Helper, 
+but it's important to recognize that **Tag Helpers do not replace HTML Helpers**
+and there is not a Tag Helper for each HTML Helper."
+
+## ef model update
+
+``` console
+dotnet ef migrations add MaxLengthOnNames -c SchoolContext
+dotnet ef database update -c SchoolContext
+```

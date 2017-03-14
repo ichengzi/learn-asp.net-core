@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using ContosoUniversity.Services;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace ContosoUniversity
 {
@@ -39,7 +40,8 @@ namespace ContosoUniversity
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. 
+        // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
@@ -62,7 +64,8 @@ namespace ContosoUniversity
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. 
+        // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SchoolContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -98,5 +101,25 @@ namespace ContosoUniversity
 
             DbInitializer.Initialize(context);
         }
+    }
+
+    public class SchoolContextFactory : IDbContextFactory<SchoolContext>
+    {
+        public IConfigurationRoot Configuration { get; }
+
+        public SchoolContext Create(DbContextFactoryOptions options)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
+            //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ContosoUniversity2;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ContosoUniversity3;Trusted_Connection=True;MultipleActiveResultSets=true");
+            //optionsBuilder.UseSqlite("Data Source=blog.db");
+
+            return new SchoolContext(optionsBuilder.Options);
+        }
+
+        //public SchoolContext Create(DbContextFactoryOptions options)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
