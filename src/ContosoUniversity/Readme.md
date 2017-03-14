@@ -121,7 +121,7 @@ It should be used only when no other semantic element is appropriate.
 
 ## Route data and Query string
 
-![Route Data  And Query String](Images/route data  and query string.png)
+![Route Data And Query String](Images/route-data-and-query-string.png)
 
 ## model binder
 
@@ -305,7 +305,7 @@ The CLR decimal type maps to a SQL Server decimal type.
 But in this case you know that the column will be holding currency amounts, 
 and the money data type is more appropriate for that.
 
-![Cascade Delete](Images/cascade delete.png)
+![Cascade Delete](Images/cascade-delete.png)
 
 
 ## With payload
