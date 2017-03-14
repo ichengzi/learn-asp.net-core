@@ -359,5 +359,5 @@ dotnet ef database update -c SchoolContext
 
 
 
-
-[Images/entity diagram.png]:https://github.com/ichengzi/learn-asp.net-core/blob/master/src/ContosoUniversity/Images/entity%20diagram.png
+---------------------------
+[Images/entity diagram.png]:https://github.com/ichengzi/learn-asp.net-core/raw/master/src/ContosoUniversity/Images/entity%20diagram.png
