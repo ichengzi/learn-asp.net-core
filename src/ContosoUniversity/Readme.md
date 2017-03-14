@@ -332,7 +332,7 @@ MinimumLength doesn't change the schema, it only applies a client and server sid
 
 If you do use both, note that wherever there is a conflict, **Fluent API overrides attributes.**
 
-![Entity Diagram](./Images/entity diagram.png)
+![Entity Diagram](Images/entity diagram.png)
 
 ----------------------
 ## Tag Helper and Html Helper
@@ -347,3 +347,17 @@ and there is not a Tag Helper for each HTML Helper."
 dotnet ef migrations add MaxLengthOnNames -c SchoolContext
 dotnet ef database update -c SchoolContext
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Images/entity diagram.png]:https://github.com/ichengzi/learn-asp.net-core/blob/master/src/ContosoUniversity/Images/entity%20diagram.png
