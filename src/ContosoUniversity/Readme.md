@@ -333,6 +333,7 @@ MinimumLength doesn't change the schema, it only applies a client and server sid
 If you do use both, note that wherever there is a conflict, **Fluent API overrides attributes.**
 
 ![Entity Diagram](Images/entity diagram.png)
+![Entity Diagram](https://github.com/ichengzi/learn-asp.net-core/raw/master/src/ContosoUniversity/Images/entity%20diagram.png)
 
 ----------------------
 ## Tag Helper and Html Helper
